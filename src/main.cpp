@@ -40,17 +40,14 @@ int main(int argc, char *argv[])
       QString videoPath = argv[1];
       QFileInfo fileInfo(videoPath);
       QString audioPath = QDir::currentPath() + "/" + fileInfo.baseName() + ".mp3"; // Сохраняем в текущую директорию
-
       // Генерируем уникальное имя файла, если файл уже существует
       audioPath = generateUniqueFileName(audioPath);
-
       // Формируем команду для извлечения аудио с помощью FFmpeg
       QStringList arguments;
       arguments << "-i" << videoPath << "-map" << "0:a:0" << "-q:a" << "0" << audioPath; // Извлекаем только первый аудиопоток
-
       QProcess process;
       process.start("ffmpeg", arguments);
-
+      std::cout << "Working..." << std::endl;
       // Ждем завершения процесса
       if (!process.waitForFinished()) {
          qDebug() << "Error:" << process.errorString();
