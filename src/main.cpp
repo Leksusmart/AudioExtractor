@@ -23,7 +23,6 @@ QString generateUniqueFileName(const QString &basePath)
 
    return uniquePath;
 }
-
 int main(int argc, char *argv[])
 {
    SetConsoleOutputCP(CP_UTF8); // Устанавливаем кодовую страницу вывода на UTF-8
@@ -37,17 +36,19 @@ int main(int argc, char *argv[])
 
       a.exec();
    } else {
-      QString videoPath = argv[1];
+      std::cout << "Working.";
+      QString videoPath = QString::fromLocal8Bit(argv[1]);
       QFileInfo fileInfo(videoPath);
       QString audioPath = QDir::currentPath() + "/" + fileInfo.baseName() + ".mp3"; // Сохраняем в текущую директорию
       // Генерируем уникальное имя файла, если файл уже существует
       audioPath = generateUniqueFileName(audioPath);
+      std::cout << ".";
       // Формируем команду для извлечения аудио с помощью FFmpeg
       QStringList arguments;
       arguments << "-i" << videoPath << "-map" << "0:a:0" << "-q:a" << "0" << audioPath; // Извлекаем только первый аудиопоток
       QProcess process;
       process.start("ffmpeg", arguments);
-      std::cout << "Working..." << std::endl;
+      std::cout << ".";
       // Ждем завершения процесса
       if (!process.waitForFinished()) {
          qDebug() << "Error:" << process.errorString();
